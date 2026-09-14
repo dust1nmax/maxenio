@@ -29,6 +29,42 @@ CloudWeGo Eino + Go Agent 学习项目。边学边记，笔记即代码。
 └── SKILL.md            # 学习助手配置
 ```
 
+## 从零配置环境
+
+### 1. 初始化项目
+
+```bash
+# 创建项目目录
+mkdir my-eino-project && cd my-eino-project
+
+# 初始化 Go 模块
+go mod init my-eino-project
+
+# 安装依赖
+go get github.com/cloudwego/eino
+go get github.com/cloudwego/eino-ext/components/model/ark
+go get github.com/cloudwego/eino/schema
+go get github.com/cloudwego/eino/components/prompt
+go get github.com/joho/godotenv
+```
+
+### 2. 配置环境变量
+
+```bash
+# 创建 .env 文件
+cat > .env << EOF
+APK_API_KEY=your_api_key
+MODEL=your_model_name
+EOF
+```
+
+### 3. 验证安装
+
+```bash
+go mod tidy
+go run .
+```
+
 ## 运行 Demo
 
 ```bash
