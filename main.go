@@ -28,22 +28,22 @@ func main() {
 		schema.UserMessage("你是谁？"),
 	}
 
-	// response, err := model.Generate(
-	// 	ctx,
-	// 	intput,
+	response, err := model.Generate(
+		ctx,
+		intput,
 		
-	// )
-	// if err != nil{panic(err)} 
-	// print(response.Content)
+	)
+	if err != nil{panic(err)} 
+	print(response.Content)
 
 	//流式输出
-	reader,err := model.Stream(ctx, intput)
-	if err != nil{panic(err)}
-	defer reader.Close()
+	// reader,err := model.Stream(ctx, intput)
+	// if err != nil{panic(err)}
+	// defer reader.Close()
 
-	for{
-		chunk,err := reader.Recv()
-		if err != nil{panic(err)}
-		print(chunk.Content)
-	}
+	// for{
+	// 	chunk,err := reader.Recv()
+	// 	if err != nil{panic(err)}
+	// 	print(chunk.Content)
+	// }
 }
