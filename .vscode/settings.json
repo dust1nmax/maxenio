@@ -1,9 +1,0 @@
-{
-  "go.goroot": "",
-  "go.toolsGopath": "",
-  "go.testEnvironment": {
-    "APK_API_KEY": "${env:APK_API_KEY}",
-    "MODEL": "${env:MODEL}"
-  },
-  "go.delveGui": {}
-}

@@ -24,7 +24,6 @@ CloudWeGo Eino + Go Agent 学习项目。边学边记，笔记即代码。
 │   │   ├── chat_model.md
 │   │   └── template.md
 │   └── daily/          # 每日学习记录
-├── .vscode/            # VSCode 配置
 ├── main.go             # 主程序入口
 └── SKILL.md            # 学习助手配置
 ```
@@ -34,13 +33,13 @@ CloudWeGo Eino + Go Agent 学习项目。边学边记，笔记即代码。
 ### 1. 初始化项目
 
 ```bash
-# 创建项目目录
 mkdir my-eino-project && cd my-eino-project
-
-# 初始化 Go 模块
 go mod init my-eino-project
+```
 
-# 安装依赖
+### 2. 安装依赖
+
+```bash
 go get github.com/cloudwego/eino
 go get github.com/cloudwego/eino-ext/components/model/ark
 go get github.com/cloudwego/eino/schema
@@ -48,17 +47,16 @@ go get github.com/cloudwego/eino/components/prompt
 go get github.com/joho/godotenv
 ```
 
-### 2. 配置环境变量
+### 3. 配置环境变量
 
-```bash
-# 创建 .env 文件
-cat > .env << EOF
+创建 `.env` 文件：
+
+```env
 APK_API_KEY=your_api_key
 MODEL=your_model_name
-EOF
 ```
 
-### 3. 验证安装
+### 4. 验证安装
 
 ```bash
 go mod tidy
@@ -72,30 +70,6 @@ cd demos/01_basic_chat && go run main.go
 cd demos/02_streaming_chat && go run main.go
 cd demos/03_template_demo && go run main.go
 ```
-
-## VSCode 环境设置
-
-### 1. 安装扩展
-
-- Go (by Go Team at Google)
-- Delve Debugger (by Go Team)
-
-### 2. 环境变量
-
-确保 shell 中有 `APK_API_KEY` 和 `MODEL` 环境变量，或在 `.env` 文件中配置：
-
-```env
-APK_API_KEY=your_api_key
-MODEL=your_model_name
-```
-
-### 3. Debug
-
-按 `F5` 选择对应的 Launch 配置即可调试：
-
-- `Launch basic_chat`
-- `Launch streaming_chat`
-- `Launch template_demo`
 
 ## 技术栈
 
