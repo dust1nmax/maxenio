@@ -1,6 +1,6 @@
 ---
 name: maxenio-notes
-description: "maxenio 自动记笔记助手。自动记录所有对话内容、技术知识、问题解决方案到 docs/ 目录，并自动 Git 提交。触发词：开始、记录、问题、代码、讲解、解释。"
+description: "maxenio 自动记笔记助手。自动记录技术知识点到 docs/knowledge.md，并自动 Git 提交。触发词：学习、记录、问题、代码、讲解、解释、技术术语。"
 metadata:
   author: max
   version: "1.0.0"
@@ -10,21 +10,25 @@ metadata:
 
 # maxenio Notes Assistant
 
-自动化笔记系统，记录所有对话内容到 docs/ 目录。
+自动化知识点记录系统，将技术知识整理到 docs/knowledge.md。
 
 ## When to use
 
 **自动激活场景**：
 
-1. **任何对话后**：记录所有对话内容
+1. **讨论技术内容时**：
+   - Go 代码、eino 框架
+   - API 调用、ARK 模型
+   - Bug/报错
+   - 项目架构、设计决策
+   - 技术术语解释
+
 2. **显式记录请求**：
    - 用户说："记录一下"、"保存笔记"、"写入笔记"
 
 ## How to use
 
 ### 1. 初始化检查
-
-首次激活时，确保笔记结构存在：
 
 ```bash
 # 检测 Git 仓库根目录
@@ -33,29 +37,13 @@ git rev-parse --show-toplevel
 # 创建笔记目录（如不存在）
 mkdir -p docs
 
-# 创建笔记文件（如不存在）
-# - docs/notes.md
+# 创建知识文件（如不存在）
 # - docs/knowledge.md
 ```
 
-### 2. 笔记文件结构
+### 2. 知识点文件结构
 
-**docs/notes.md** - 对话记录：
-```markdown
-# Notes
-
-## 2026-09-14
-
-### 对话 1
-**用户**: ...
-**助手**: ...
-
-### 对话 2
-**用户**: ...
-**助手**: ...
-```
-
-**docs/knowledge.md** - 知识整理：
+**docs/knowledge.md**：
 ```markdown
 # Knowledge
 
@@ -72,25 +60,37 @@ mkdir -p docs
 
 ### 3. 内容记录
 
-**每次对话后**，提取并记录：
+**检测到技术内容时**，提取并记录：
 
 ```python
-def record_conversation(user_message, assistant_response):
+def extract_knowledge(user_message, assistant_response):
     """
-    1. 提取关键信息
-       - 用户问题/请求
-       - 助手回答/代码
-       - 技术术语
-       - 代码示例
+    1. 提取技术概念
+       - 术语定义
+       - 代码逻辑
+       - API 用法
 
-    2. 更新 notes.md
-       - 追加新对话记录
-       - 按日期分组
+    2. 推断分类
+       - Go / Eino（框架相关）
+       - API / ARK（API 调用）
+       - 项目架构
+       - Bug 解决
 
     3. 更新 knowledge.md
-       - 提取新知识点
-       - 归类整理
+       - 在对应分类下添加条目
+       - 去重处理
     """
+```
+
+**分类关键词**：
+
+```python
+CATEGORY_KEYWORDS = {
+    "Go / Eino": ["Go", "golang", "eino", "func", "interface", "struct", "context", "channel"],
+    "API / ARK": ["API", "ark", "ChatModel", "Generate", "Stream", "APIKey", "Model"],
+    "项目架构": ["main", "package", "import", "module", "struct", "设计"],
+    "Bug 解决": ["报错", "错误", "panic", "nil", "failed", "问题"],
+}
 ```
 
 ### 4. Git 自动化
@@ -103,34 +103,29 @@ def generate_commit_message(user_message, assistant_response):
     格式: "[动作] [主题]"
 
     动作词:
-    - 添加 (新内容/代码)
+    - 添加 (新知识点)
     - 更新 (修改现有)
-    - 记录 (笔记/知识)
-    - 解决 (问题/bug)
+    - 解决 (bug 相关)
     """
 
-    # 提取主要动作
-    if "报错" in user_message or "错误" in user_message:
+    if any(kw in user_message for kw in ["报错", "错误", "panic"]):
         action = "解决"
-        topic = extract_error_topic(user_message)
-    elif "代码" in user_message or "实现" in user_message:
+        topic = extract_bug_topic(user_message)
+    elif any(kw in user_message for kw in ["解释", "什么是", "概念"]):
         action = "添加"
-        topic = extract_code_topic(assistant_response)
-    elif "解释" in user_message or "什么是" in user_message:
-        action = "记录"
         topic = extract_concept_topic(user_message)
     else:
         action = "更新"
         topic = extract_topic(user_message)
 
-    return f"{action} {topic}"
+    return f"{action} {topic}"[:50]
 ```
 
 **执行 Git 操作**：
 
 ```bash
 cd {repo_root}
-git add docs/
+git add docs/knowledge.md
 git commit -m "{generated_message}"
 git push origin {current_branch}
 ```
@@ -162,30 +157,13 @@ if git_push_failed:
     print("提示：更改已保存到本地，推送失败（网络问题）")
 ```
 
-## Validation
-
-**检查笔记文件**：
-
-```bash
-# 验证笔记文件存在
-ls -la docs/notes.md docs/knowledge.md
-
-# 验证 Git 状态
-git status docs/
-```
-
 ## Summary
 
 **核心行为**：
-1. 自动记录所有对话内容
-2. 提取并整理技术知识
+1. 检测技术内容并提取知识点
+2. 整理到 docs/knowledge.md
 3. 自动 Git 提交和推送
 4. 完全静默，不打扰用户
-
-**用户体验**：
-- 对话结束 → 笔记自动保存
-- 完全静默 → 无打扰
-- Git 记录 → 所有修改可追溯
 
 ---
 
