@@ -103,6 +103,50 @@ Document → Embedding → Vector → Indexer → Milvus
 err = indexer.Store(ctx, docs)
 ```
 
+### Document 存储格式
+
+`schema.Document` 是 Eino 定义的文档结构：
+
+```go
+docs := []*schema.Document{
+    {
+        ID:      "1",                              // 文档唯一标识
+        Content: "今天是2026年9月15日17：05",      // 文本内容（会被转成向量）
+        MetaData: map[string]any{
+            "author": "max",                       // 自定义元数据
+        },
+    },
+}
+```
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `ID` | string | 文档唯一标识符 |
+| `Content` | string | 文档内容（Indexer 自动调用 Embedder 转成向量） |
+| `MetaData` | `map[string]any` | 自定义元数据（如 author、timestamp） |
+
+### 存储流程
+
+```
+输入 schema.Document（包含文本内容）
+        ↓
+Indexer 内部调用关联的 Embedder
+        ↓
+Content 被转换为向量（2048 维）
+        ↓
+向量 + ID + MetaData 存入 Milvus
+```
+
+### milvus2 vs milvus（v1）
+
+| | milvus | milvus2 |
+|---|---|---|
+| 客户端路径 | `milvus-io/milvus/client/v1` | `milvus-io/milvus/client/v2` |
+| API 风格 | 旧版 | 现代化 |
+| Eino 封装 | `milvus` | `milvus2` |
+
+Eino 使用 `milvus2` 包作为 v2 客户端的封装，API 更简洁。
+
 ## 相关知识
 
 - [Embedder](./embedder.md)
