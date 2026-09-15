@@ -11,7 +11,7 @@ import (
 	
 
 func main() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("/home/max/maxenio/.env")
 	if err != nil {
 		panic(err)
 	}
@@ -45,4 +45,3 @@ func main() {
 		println("文本", i+1, "的向量维度:", len(embedding))
 	}
 }
-

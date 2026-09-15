@@ -12,7 +12,10 @@ import (
 
 func main() {
 	// 加载 .env 文件中的环境变量（APK_API_KEY, MODEL）
-	_ = godotenv.Load(".env")
+	err := godotenv.Load("/home/max/maxenio/.env")
+	if err != nil{
+		panic(err)
+	}
 
 	ctx := context.Background()
 
@@ -20,7 +23,7 @@ func main() {
 	model, err := ark.NewChatModel(
 		ctx,
 		&ark.ChatModelConfig{
-			APIKey: os.Getenv("APK_API_KEY"),
+			APIKey: os.Getenv("ARK_API_KEY"),
 			Model:  os.Getenv("MODEL"),
 		})
 	if err != nil {
