@@ -32,7 +32,11 @@ Embedder
 - 语义搜索：对比向量相似度
 - 聚类分析
 
+## Eino 中的使用
+
+通过 Embedding 把文本转成向量后，配合 Indexer 存入 Milvus。
+
 ## 相关知识
 
+- [Milvus](./milvus.md)
 - [RAG](./rag.md)
-- [Retriever](./retriever.md)
