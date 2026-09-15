@@ -148,6 +148,69 @@ Content 被转换为向量（2048 维）
 
 简单说：**milvus2 是 v2 版客户端**，API 更简洁，性能更好，Eino 当前推荐使用 `milvus2`。
 
+## Eino milvus2 Retriever
+
+使用：
+```go
+github.com/cloudwego/eino-ext/components/retriever/milvus2
+```
+
+### Retriever vs Indexer
+
+| | Indexer | Retriever |
+|---|---|---|
+| 作用 | 写入数据到 Milvus | 从 Milvus 检索数据 |
+| 方法 | `Store(ctx, docs)` | `Retrieve(ctx, query)` |
+| 方向 | Document → Milvus | Query → Milvus → Documents |
+
+### Retriever 工作流程
+
+```
+Query → Embedder → Query Vector → Milvus Search → Top-K Docs → 返回
+```
+
+### 核心配置
+
+```go
+retriever, err := milvus2.NewRetriever(ctx, &milvus2.RetrieverConfig{
+    ClientConfig: &milvusclient.ClientConfig{
+        Address: "localhost:19530",
+        DBName:  "MaxEino",
+    },
+    Collection: "test",
+    OutputFields: []string{"id", "content", "metadata"},
+    TopK: 3,                              // 返回前 3 条相似结果
+    SearchMode: search_mode.NewApproximate(milvus2.COSINE),
+    Embedding: embedder,                  // 用于将 Query 转成向量
+})
+```
+
+| 配置项 | 说明 |
+|------|------|
+| `Collection` | 集合名称 |
+| `OutputFields` | 返回的字段（id, content, metadata） |
+| `TopK` | 返回最相似的 K 条结果 |
+| `SearchMode` | 搜索模式（近似搜索、精确搜索等） |
+| `Embedding` | Query 向量化 |
+
+### Retrieve 用法
+
+```go
+results, err := retriever.Retrieve(ctx, "可乐")
+for i, doc := range results {
+    fmt.Println(doc.Content)  // 文档内容
+    fmt.Println(doc.Score())  // 相似度分数
+}
+```
+
+### Retriever 返回结果
+
+`Retrieve` 返回 `[]*schema.Document`，每条包含：
+- `ID`：文档标识
+- `Content`：文档内容
+- `MetaData`：元数据
+- `Score()`：相似度分数
+
 ## 相关知识
 
 - [Embedder](./embedder.md)

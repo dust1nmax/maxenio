@@ -19,7 +19,8 @@ CloudWeGo Eino + Go Agent 学习项目。边学边记，笔记即代码。
 │   ├── 01_basic_chat/     # Template + Generate
 │   ├── 02_streaming_chat/ # Stream 流式输出
 │   ├── 03_template_demo/  # Prompt Template
-│   └── 05_indexer/        # Milvus Indexer + RAG 索引
+│   ├── 05_indexer/        # Milvus Indexer + RAG 索引
+│   └── 06_retriever/      # Milvus Retriever + RAG 检索
 ├── docs/               # 学习笔记（自动生成）
 │   ├── eino/           # Eino 主题笔记
 │   │   ├── chat_model.md
@@ -73,6 +74,7 @@ cd demos/01_basic_chat && go run main.go
 cd demos/02_streaming_chat && go run main.go
 cd demos/03_template_demo && go run main.go
 cd demos/05_indexer && go run main.go
+cd demos/06_retriever && go run main.go
 ```
 
 ## 技术栈
