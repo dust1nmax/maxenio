@@ -139,13 +139,14 @@ Content 被转换为向量（2048 维）
 
 ### milvus2 vs milvus（v1）
 
-| | milvus | milvus2 |
+| | milvus (v1) | milvus2 (v2) |
 |---|---|---|
-| 客户端路径 | `milvus-io/milvus/client/v1` | `milvus-io/milvus/client/v2` |
+| 包路径 | `milvus-io/milvus/client/v1` | `milvus-io/milvus/client/v2` |
 | API 风格 | 旧版 | 现代化 |
-| Eino 封装 | `milvus` | `milvus2` |
+| Eino 封装 | `eino-ext/components/indexer/milvus` | `eino-ext/components/indexer/milvus2` |
+| 功能 | 基础向量存储 | 批量写入、性能优化 |
 
-Eino 使用 `milvus2` 包作为 v2 客户端的封装，API 更简洁。
+简单说：**milvus2 是 v2 版客户端**，API 更简洁，性能更好，Eino 当前推荐使用 `milvus2`。
 
 ## 相关知识
 

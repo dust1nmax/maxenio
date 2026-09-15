@@ -19,7 +19,7 @@ import (
 // collection 定义 Milvus 集合名称
 var collection = "MaxEino"
 
-func IndexerRAG() {
+func main() {
 	// 创建上下文，用于控制超时和取消操作
 	ctx := context.Background()
 
@@ -50,16 +50,16 @@ func IndexerRAG() {
 	indexer, err := milvus2.NewIndexer(ctx, &milvus2.IndexerConfig{
 		ClientConfig: &milvusclient.ClientConfig{
 			Address: "localhost:19530", // Milvus 服务地址和端口
-			DBName: "MaxEino",          // 目标数据库名称
+			DBName:  "MaxEino",         // 目标数据库名称
 		},
 		Collection: "test", // Milvus 集合名称
 
 		// 向量配置：Dimension 指定向量维度为 2048，MetricType 使用余弦相似度
 		Vector: &milvus2.VectorConfig{
 			Dimension: 2048,
+			// 检索时 计算相近度的方法
 			MetricType: milvus2.COSINE,
 		},
-
 		// 关联 Embedder，Indexer 会自动使用它对文档内容进行向量化
 		Embedding: embedder,
 	})
@@ -69,9 +69,23 @@ func IndexerRAG() {
 
 	// 准备要存储的文档，包含文档 ID、内容和元数据信息
 	docs := []*schema.Document{
+		// {
+		// 	ID:      "1", // 文档唯一标识符
+		// 	Content: "今天是2026年9月15日17：05", // 文档内容
+		// 	MetaData: map[string]any{
+		// 		"author": "max", // 文档作者元数据
+		// 	},
+		// },
 		{
-			ID:      "1", // 文档唯一标识符
-			Content: "今天是2026年9月15日17：05", // 文档内容
+			ID:      "2",        // 文档唯一标识符
+			Content: "小明喜欢可口可乐", // 文档内容
+			MetaData: map[string]any{
+				"author": "max", // 文档作者元数据
+			},
+		},
+		{
+			ID:      "3",        // 文档唯一标识符
+			Content: "小李喜欢百事可乐", // 文档内容
 			MetaData: map[string]any{
 				"author": "max", // 文档作者元数据
 			},
@@ -85,9 +99,4 @@ func IndexerRAG() {
 	}
 
 	log.Printf("Stored documents with IDs: %v", ids)
-}
-
-// main 程序入口函数
-func main() {
-	IndexerRAG()
 }
