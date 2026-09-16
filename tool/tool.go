@@ -6,18 +6,18 @@ import (
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/components/tool/utils"
 	"github.com/cloudwego/eino/schema"
-) 
+)
 
-type Weather struct{
-	City string  `json:"city"`
-	Temperature  string `json:"temperature"`
+type Weather struct {
+	City        string `json:"city"`
+	Temperature string `json:"temperature"`
 }
 
 type InputParams struct {
 	City string `json:"city" jsonschema:"description = name of city"`
 }
 
-func GetWeather(_ context.Context,params *InputParams)(string, error){
+func GetWeather(_ context.Context, params *InputParams) (string, error) {
 	WeatherSet := []Weather{
 		{City: "北京", Temperature: "28"},
 		{City: "上海", Temperature: "35"},
@@ -25,15 +25,15 @@ func GetWeather(_ context.Context,params *InputParams)(string, error){
 		{City: "深圳", Temperature: "29"},
 	}
 
-	for _, t := range WeatherSet{
-		if t.City == params.City{
+	for _, t := range WeatherSet {
+		if t.City == params.City {
 			return t.Temperature, nil
 		}
 	}
 	return "", nil
 }
 
-func CreateTool()tool.InvokableTool{
+func CreateTool() tool.InvokableTool {
 	GetWeatherTool := utils.NewTool(
 		&schema.ToolInfo{
 			Name: "getweather",
@@ -41,12 +41,12 @@ func CreateTool()tool.InvokableTool{
 			ParamsOneOf: schema.NewParamsOneOfByParams(
 				map[string]*schema.ParameterInfo{
 					"city": &schema.ParameterInfo{
-						Type: schema.String,
+						Type:     schema.String,
 						Required: true,
 					},
 				},
 			),
-		},GetWeather)
+		}, GetWeather)
 
 	return GetWeatherTool
 
