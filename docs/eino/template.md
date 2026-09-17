@@ -60,6 +60,19 @@ messages, err := template.Format(ctx, map[string]any{
 })
 ```
 
+## 容易混淆
+
+- **变量名拼错不会编译报错。** `Format` 的入参是 `map[string]any`（`components/prompt/interface.go:44`）：
+
+  ```go
+  Format(ctx context.Context, vs map[string]any, opts ...Option) ([]*schema.Message, error)
+  ```
+
+  模板里写 `{role}`，params 里却写成 `{"roles": ...}`——**编译完全通过**，运行期这个变量填不上。编译器只知道 value 是 `any`，不知道 map 里有哪些 key。这是 Eino 里静态类型检查的边界之一，详见 [静态类型](./static_typing.md)。
+
+- **`Format` 和模板内容的对应关系没有编译期约束。** 模板字符串里写了哪些占位符，只能靠人和运行期保证，`go build` 看不出来。
+
 ## 相关知识
 
 - [ChatModel](./chat_model.md)
+- [静态类型](./static_typing.md) —— 为什么 `map[string]any` 是类型检查的断点

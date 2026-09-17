@@ -103,4 +103,5 @@ Stream → StreamReader → chunk
 ## 相关知识
 
 - [Template](./template.md)
+- [静态类型](./static_typing.md) —— 为什么 `Generate(ctx, []*schema.Message)` 这样的签名能替使用者省下查文档的成本
 - schema.Message
